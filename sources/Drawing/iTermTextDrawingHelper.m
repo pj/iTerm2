@@ -2536,9 +2536,12 @@ static BOOL NSRangesAdjacent(NSRange lhs, NSRange rhs) {
             const BOOL isDoubleHeight = (_currentLineAttribute == iTermLineAttributeDoubleHeightTop ||
                                          _currentLineAttribute == iTermLineAttributeDoubleHeightBottom);
             NSString *fontName = isDoubleHeight ? CFBridgingRelease(CTFontCopyFamilyName(runFont)) : nil;
+            CFDataRef sbixData = isDoubleHeight ? CTFontCopyTable(runFont, kCTFontTableSbix, 0) : NULL;
             const BOOL isEmojiOnDHL = isDoubleHeight &&
                 ([fontName isEqualToString:@"AppleColorEmoji"] ||
-                 [fontName isEqualToString:@"Apple Color Emoji"]);
+                 [fontName isEqualToString:@"Apple Color Emoji"] ||
+                 sbixData != NULL);
+            if (sbixData) CFRelease(sbixData);
             if (isEmojiOnDHL) {
                 // Emoji ignore the text matrix for scaling (they're color
                 // bitmaps). For DECDHL, move the vertical 2x from the text

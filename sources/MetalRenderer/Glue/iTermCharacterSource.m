@@ -638,8 +638,11 @@ static const CGFloat iTermCharacterSourceAliasedFakeBoldShiftPoints = 1;
     _haveTestedForEmoji = YES;
 
     NSString *fontName = CFBridgingRelease(CTFontCopyFamilyName(runFont));
+    CFDataRef sbixData = CTFontCopyTable(runFont, kCTFontTableSbix, 0);
     _isEmoji = ([fontName isEqualToString:@"AppleColorEmoji"] ||
-                [fontName isEqualToString:@"Apple Color Emoji"]);
+                [fontName isEqualToString:@"Apple Color Emoji"] ||
+                sbixData != NULL);
+    if (sbixData) CFRelease(sbixData);
     _numberOfIterationsNeeded = 1;
     if (!_isEmoji) {
         if (iTermTextIsMonochrome()) {

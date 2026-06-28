@@ -440,14 +440,14 @@ endif
 
 CoreParse: force
 	rm -rf ThirdParty/CoreParse.framework
-	cd submodules/CoreParse && xcodebuild -target CoreParse -configuration Release CONFIGURATION_BUILD_DIR=../../ThirdParty VALID_ARCHS="arm64 x86_64" $(SIGNING_FLAGS) $(ARCH_FLAGS)
+	cd submodules/CoreParse && xcodebuild -scheme CoreParse -configuration Release CONFIGURATION_BUILD_DIR=../../ThirdParty VALID_ARCHS="arm64 x86_64" $(SIGNING_FLAGS) $(ARCH_FLAGS)
 	cp "submodules/CoreParse//CoreParse/Tokenisation/Token Recognisers/CPRegexpRecogniser.h" ThirdParty/CoreParse.framework/Versions/A/Headers/CPRegexpRecogniser.h
 
 NMSSH: force fatlibssh2
 	echo Begin building NMSSH
 	rm -rf ThirdParty/NMSSH.framework
 	cp submodules/libssh2/include/* submodules/NMSSH/NMSSH-OSX/Libraries/include/libssh2
-	cd submodules/NMSSH && xcodebuild -target NMSSH -project NMSSH.xcodeproj -configuration Release CONFIGURATION_BUILD_DIR=../../ThirdParty $(SIGNING_FLAGS) $(ARCH_FLAGS)
+	cd submodules/NMSSH && xcodebuild -scheme NMSSH -project NMSSH.xcodeproj -configuration Release CONFIGURATION_BUILD_DIR=../../ThirdParty $(SIGNING_FLAGS) $(ARCH_FLAGS)
 
 paranoid-NMSSH: force
 	/usr/bin/sandbox-exec -f deps.sb $(MAKE) BUILD_DIR="$(BUILD_DIR)" NMSSH
@@ -561,12 +561,12 @@ SearchableComboListView: force
 	cd SearchableComboListView && $(MAKE)
 
 SwiftyMarkdown: force
-	cd submodules/SwiftyMarkdown && xcodebuild -configuration Release 'CONFIGURATION_BUILD_DIR=$$(SRCROOT)/Build/$$(CONFIGURATION)' $(SIGNING_FLAGS) $(ARCH_FLAGS)
+	cd submodules/SwiftyMarkdown && xcodebuild -scheme SwiftyMarkdown-Package -configuration Release 'CONFIGURATION_BUILD_DIR=$$(SRCROOT)/Build/$$(CONFIGURATION)' $(SIGNING_FLAGS) $(ARCH_FLAGS)
 	rm -rf ThirdParty/SwiftyMarkdown.framework
 	mv submodules/SwiftyMarkdown/build/Release/SwiftyMarkdown.framework ThirdParty/SwiftyMarkdown.framework
 
 Highlightr: force
-	cd submodules/Highlightr && xcodebuild -project Highlightr.xcodeproj -target Highlightr-macOS 'CONFIGURATION_BUILD_DIR=$$(SRCROOT)/Build/$$(CONFIGURATION)' $(SIGNING_FLAGS) $(ARCH_FLAGS)
+	cd submodules/Highlightr && xcodebuild -scheme Highlightr-macOS -project Highlightr.xcodeproj 'CONFIGURATION_BUILD_DIR=$$(SRCROOT)/Build/$$(CONFIGURATION)' $(SIGNING_FLAGS) $(ARCH_FLAGS)
 	rm -rf ThirdParty/Highlightr.framework
 	mv submodules/Highlightr/build/Release/Highlightr.framework ThirdParty/Highlightr.framework
 
