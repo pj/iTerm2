@@ -749,6 +749,19 @@ bool iTermIsDoubleWidthCharacter(uint32_t unicode,
                                  bool ambiguousIsDoubleWidth,
                                  int unicodeVersion,
                                  bool fullWidthFlags) {
+    // emojifont: U+100000-U+1003FF is a reserved Supplementary PUA (Plane 16)
+    // range used by the emojifont project to inject custom SBIX color
+    // glyphs. Its default Unicode East Asian Width is Ambiguous, not Wide,
+    // so without this override it would only render at double-width when
+    // the user has "treat ambiguous characters as double-width" enabled —
+    // which also affects every CJK-ambiguous character globally. This
+    // override is unconditional and independent of ambiguousIsDoubleWidth
+    // on purpose: these code points have no meaning other than "meme glyph
+    // that wants 2 cells," so there's no ambiguity to resolve per-user.
+    if (unicode >= 0x100000 && unicode <= 0x1003FF) {
+        return true;
+    }
+
     // Fast path for common ASCII and Latin-1 characters
     if (unicode <= 0xa0 || (unicode > 0x452 && unicode < 0x1100)) {
         return false;
