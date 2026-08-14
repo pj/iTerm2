@@ -638,11 +638,16 @@ static const CGFloat iTermCharacterSourceAliasedFakeBoldShiftPoints = 1;
     _haveTestedForEmoji = YES;
 
     NSString *fontName = CFBridgingRelease(CTFontCopyFamilyName(runFont));
-    CFDataRef sbixData = CTFontCopyTable(runFont, kCTFontTableSbix, 0);
     _isEmoji = ([fontName isEqualToString:@"AppleColorEmoji"] ||
-                [fontName isEqualToString:@"Apple Color Emoji"] ||
-                sbixData != NULL);
-    if (sbixData) CFRelease(sbixData);
+                [fontName isEqualToString:@"Apple Color Emoji"]);
+    // Subclasses that know the actual character being drawn (e.g.
+    // iTermRegularCharacterSource) may further set _isEmoji for sbix glyphs
+    // outside Apple Color Emoji — see its override of this method. It can't
+    // be decided here: whether a font *has* an sbix table doesn't mean this
+    // specific glyph has bitmap data in it (e.g. MemeFont has sbix data only
+    // for its ~40 injected meme code points; every other glyph it covers,
+    // including a base Nerd Font's few thousand icon glyphs, is a normal
+    // outline glyph that must still be tinted with the real text color).
     _numberOfIterationsNeeded = 1;
     if (!_isEmoji) {
         if (iTermTextIsMonochrome()) {

@@ -114,6 +114,30 @@
     return _string;
 }
 
+// The base class only recognizes Apple Color Emoji by font name. A font
+// merely *having* an sbix table doesn't mean this glyph has bitmap data in
+// it — MemeFont has sbix data only for its ~40 injected meme code points
+// (Supplementary PUA, Plane 16: U+100000-U+1003FF); every other glyph it
+// covers, including a base Nerd Font's few thousand icon glyphs, is a
+// normal outline glyph that must still be tinted with the real text color,
+// not drawn as-is like a color bitmap. So this only opts in for sbix when
+// the character being drawn is actually in that range.
+- (void)initializeStateIfNeededWithFont:(CTFontRef)runFont {
+    [super initializeStateIfNeededWithFont:runFont];
+    if (_isEmoji || _string.length == 0) {
+        return;
+    }
+    UTF32Char c = [_string longCharacterAtIndex:0];
+    if (c < 0x100000 || c > 0x1003FF) {
+        return;
+    }
+    CFDataRef sbixData = CTFontCopyTable(runFont, kCTFontTableSbix, 0);
+    if (sbixData) {
+        _isEmoji = YES;
+        CFRelease(sbixData);
+    }
+}
+
 #pragma mark Lazy Computations
 
 - (CGSize)desiredOffset {

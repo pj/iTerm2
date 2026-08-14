@@ -34,6 +34,12 @@
                           skew:(CGFloat)skew
                    initialized:(BOOL)haveInitializedThisIteration;
 
+// Sets _isEmoji (among other one-time state) the first time this is called.
+// Subclasses that know the actual character (e.g. iTermRegularCharacterSource)
+// can override to additionally recognize sbix glyphs outside Apple Color
+// Emoji — see its override for why that can't be decided in the base class.
+- (void)initializeStateIfNeededWithFont:(CTFontRef)runFont;
+
 - (void)initializeTextMatrixInContext:(CGContextRef)cgContext
                              withSkew:(CGFloat)skew
                                offset:(CGPoint)offset;
