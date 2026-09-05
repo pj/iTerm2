@@ -7,4 +7,5 @@ framework module BetterFontPicker {
 
 module BetterFontPicker.Swift {
   header "BetterFontPicker-Swift.h"
+  requires objc
 }
