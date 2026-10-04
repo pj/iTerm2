@@ -13,11 +13,11 @@
     {
       packages.${system}.default = pkgs.stdenvNoCC.mkDerivation {
         pname = "memeterminal";
-        version = "0.0.2";
+        version = "0.0.3";
 
         src = pkgs.fetchurl {
-          url = "https://github.com/pj/iTerm2/releases/download/v0.0.2/MemeTerminal.zip";
-          sha256 = "15rz7jmd4cz260r7byqx0757zhds28pvv2h95sm7l67xylybc4my";
+          url = "https://github.com/pj/iTerm2/releases/download/v0.0.3/MemeTerminal.zip";
+          sha256 = "1254vzv81bqrnznk32bfmfgky9i5dlkb144mx2wi3bwfgai0vq1n";
         };
 
         nativeBuildInputs = [ pkgs.unzip ];
